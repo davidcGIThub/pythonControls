@@ -20,7 +20,7 @@ zdot0 = 0 # speed of the ball, m/s
 # Simulation Parameters
 
 tstep = 0.01  # time step size for simulation
-time = 2.0 # time in seconds of simulation
+time = 10.0 # time in seconds of simulation
 steps = int(time/tstep) # number of steps in simulation
 # dirty derivative parameters
 

@@ -24,7 +24,8 @@ line5, = ax.plot([], [], lw=1, color = 'green')
 
 state = [P.z0,P.zdot0]
 zprev = state[0]
-zd = 1 #position desired, m
+global zd
+zd = 5 #position desired, m
 
 
 def init():
@@ -39,6 +40,7 @@ def init():
     line5.set_data([], [])
 
     return line1,line2,line3,line4,line5,rectangle
+
 def animate(i):
     #damper
     global state

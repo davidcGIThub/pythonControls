@@ -6,7 +6,7 @@ def msdController(zd,z,z_prev):
     deriv = (z - z_prev)/P.tstep
     force =  error*P.Kp - deriv*P.Kd
 
-    if abs(force) > 2:
-        force = 2
+    #if abs(force) > 2:
+    #    force = 2
 
     return force

@@ -14,7 +14,7 @@ state = [P.z0,P.zdot0]
 zprev = P.z0
 Fdata = []
 
-zd = 1 #position desired, m
+zd = 5 #position desired, m
 Fdata.append(contr.msdController(zd,state[0],zprev))
 zdata.append(P.z0)
 

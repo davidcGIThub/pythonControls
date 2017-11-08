@@ -6,14 +6,12 @@ import bobParam as P
 import bobDynamics as dyn
 #import bobController as contr
 
-
-
 thetadata = []
 tdata = np.linspace(0,P.time,P.steps+1)
 state = [P.z0,P.zdot0,P.theta0,P.thetadot0]
 #thetaprev = P.theta0
 #Fdata = []
-F = 1
+F = 5
 #thetad = 1 #theta desired, m
 #Fdata.append(contr.bobController(zd,state[0],zprev))
 thetadata.append(P.theta0)
@@ -23,8 +21,8 @@ for i in range(0,P.steps):
     #F = contr.msdController(zd,state[0],zprev)
     #Fdata.append(F)
     #zprev = state[0] #save the previous position
+
     state = dyn.bobDynamics(state[0],state[1],state[2],state[3],F)
-    print(state)
     thetadata.append(state[2])
 
 plt.figure(1)

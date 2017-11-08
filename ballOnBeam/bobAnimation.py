@@ -35,16 +35,16 @@ def animate(i):
     #global zd
     #global zprev
     #ball position
-    xball = state[0]*math.cos(state[2])-P.D*math.sin(state[2])
-    yball = state[0]*math.sin(state[2])+P.D*math.cos(state[2])
+    xball = state[0]*math.cos(state[2])-P.D/2*math.sin(state[2])
+    yball = state[0]*math.sin(state[2])+P.D/2*math.cos(state[2])
     #ball
     circle.center = (xball,yball)
     #beam
     rectangle.set_xy([0,0])
-    rectangle._angle = state[2]
+    rectangle._angle = state[2]*180/math.pi
     #F = contr.msdController(zd,state[0],zprev)
     #zprev = state[0] #save the previous position
-    F = 1
+    F = 12
     state = dyn.bobDynamics(state[0],state[1],state[2],state[3],F)
 
     return rectangle,circle
