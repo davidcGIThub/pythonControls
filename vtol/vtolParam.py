@@ -21,7 +21,7 @@ target_width = center_width/2
 # Initial Conditions
 z0 = 2.5
 zdot0 = 0
-h0 = 1.25
+h0 = 2.5
 hdot0 = 0
 theta0 = 0
 thetadot0 = 0
@@ -30,7 +30,7 @@ ztdot0 = 0;
 
 # Simulation Parameters
 
-tstep = 0.01  # time step size for simulation
+tstep = 0.001  # time step size for simulation
 time = 2.0 # time in seconds of simulation
 steps = int(time/tstep) # number of steps in simulation
 # dirty derivative parameters

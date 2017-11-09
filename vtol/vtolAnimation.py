@@ -28,16 +28,10 @@ x_ = P.z0 - P.d*math.cos(P.theta0)
 y_ = P.h0 - P.d*math.sin(P.theta0)
 rmotor = patches.Ellipse(xy=[x_,y_],width = motor_length, height = motor_width, angle = P.theta0)
 
-#left panel
-line1 = ax.plot([], [], lw=P.d, color = 'black')
-
 #right motor
 x_ = P.z0 + P.d*math.cos(P.theta0)
 y_ = P.h0 + P.d*math.sin(P.theta0)
 lmotor = patches.Ellipse(xy=[x_,y_],width = motor_length, height = motor_width, angle = P.theta0)
-
-#right panel
-line2 = ax.plot([], [], lw=P.d, color = 'black')
 
 #target
 target = patches.Rectangle((P.zt0,0),target_width,target_width,fc = 'red',ec = 'black')
@@ -49,6 +43,11 @@ target = patches.Rectangle((P.zt0,0),target_width,target_width,fc = 'red',ec = '
 state = [P.z0,P.zdot0,P.h0,P.hdot0,P.theta0,P.thetadot0]
 
 
+
+#left and right panel
+line1, = ax.plot([], [], lw=P.d, color = 'black')
+line2, = ax.plot([], [], lw=P.d, color = 'black')
+
 def init():
     ax.add_patch(center)
     ax.add_patch(lmotor)
@@ -56,36 +55,43 @@ def init():
     ax.add_patch(target)
     line1.set_data([], [])
     line2.set_data([], [])
-    return center,lmotor,rmotor,target #,line1,line2
+    return center,lmotor,rmotor,target,line1,line2
 
 def animate(i):
+    fl = 0
+    fr = 7.5
     #damper
     global state
     z_ = state[0]
     h_ = state[2]
     theta_ = state[4]
+    #left panel
+    line1.set_data([z_,z_-P.d*math.cos(theta_)],[h_,h_-P.d*math.sin(theta_)])
+    #right panel
+    line2.set_data([z_,z_+P.d*math.cos(theta_)],[h_,h_+P.d*math.sin(theta_)])
     #center
-    x_ = z_ - center_width*math.cos(theta_)/2
-    y_ = h_ - center_width/2
+    x_ = z_ - center_width*math.cos(theta_)/2 + center_width*math.cos(math.pi/2-theta_)/2
+    y_ = h_ - center_width*math.sin(theta_)/2 - center_width*math.sin(math.pi/2-theta_)/2
     center.set_xy([x_,y_])
     center._angle = theta_*180/math.pi
     #left motor
+    lmotor.set_visible(True)
     x_ = z_ - P.d*math.cos(theta_)
     y_ = h_ - P.d*math.sin(theta_)
-    lmotor.xy = [x_,y_]
-    lmotor._angle = theta_*180/math.pi
+    lmotor.center = x_,y_
+    lmotor.angle = theta_*180/math.pi
     #right motor
+    rmotor.set_visible(True)
     x_ = z_ + P.d*math.cos(theta_)
     y_ = h_ + P.d*math.sin(theta_)
-    lmotor.xy = [x_,y_]
-    lmotor._angle = theta_*180/math.pi
-    #left panel
-    line1.set_data([z_,h_],[z_-P.d*math.cos(theta_),h_-P.d*math.sin(theta_)])
-    #right panel
-    line2.set_data([z_,h_],[z_+P.d*math.cos(theta_),h_+P.d*math.sin(theta_)])
+    rmotor.center = x_,y_
+    rmotor.angle = theta_*180/math.pi
     #target
     target.set_xy([P.zt0,0]) #doesnt move right now
-    return center,lmotor,rmotor,target #,line1,line2
+
+    state = dyn.vtolDynamics(state[0],state[1],state[2],state[3],state[4],state[5],fl,fr)
+
+    return center,lmotor,rmotor,target,line1,line2
 
 anim = animation.FuncAnimation(fig, animate,
                                init_func=init,
