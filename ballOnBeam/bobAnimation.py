@@ -5,7 +5,9 @@ import matplotlib as mpl
 from matplotlib import animation
 import bobParam as P
 import bobDynamics as dyn
+import bobController as contr
 import math
+from signalGenerator import signalGenerator
 
 fig = plt.figure()
 plt.axes().set_aspect('equal')
@@ -19,8 +21,11 @@ yb_init = P.D/2+P.w # initial y position of ball when beam is horizontal
 circle = patches.Circle((.25, yb_init), radius=P.D/2, fc='red')
 
 state = [P.z0,P.zdot0,P.theta0,P.thetadot0]
-#zprev = state[0]
-#zd = 1 #position desired, m
+zprev = state[0]
+thetaprev = state[2]
+
+reference = signalGenerator(amplitude=.15, frequency=0.01, y_offset=.25)
+zd = reference.square(0)[0]  #position desired, m
 
 
 def init():
@@ -32,8 +37,9 @@ def animate(i):
     #damper
     global state
     global yb_init
-    #global zd
-    #global zprev
+    global zd
+    global zprev
+    global thetaprev
     #ball position
     xball = state[0]*math.cos(state[2])-P.D/2*math.sin(state[2])
     yball = state[0]*math.sin(state[2])+P.D/2*math.cos(state[2])
@@ -44,8 +50,13 @@ def animate(i):
     rectangle._angle = state[2]*180/math.pi
     #F = contr.msdController(zd,state[0],zprev)
     #zprev = state[0] #save the previous position
-    F = 12
+    zprev = state[0]
+    thetaprev = state[2]
+
+    F = contr.bobController(zd,state[0],zprev,state[2],thetaprev)
     state = dyn.bobDynamics(state[0],state[1],state[2],state[3],F)
+    zd = reference.square(i * P.tstep)[0]
+    print("zd = ", zd, " time= ", i * P.tstep)
 
     return rectangle,circle
 

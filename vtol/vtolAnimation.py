@@ -6,6 +6,7 @@ from matplotlib import animation
 import vtolParam as P
 import vtolDynamics as dyn
 import math
+import vtolController as contr
 
 center_width = P.center_width
 motor_length = P.motor_length
@@ -42,7 +43,11 @@ target = patches.Rectangle((P.zt0,0),target_width,target_width,fc = 'red',ec = '
 #circle = patches.Circle((.25, yb_init), radius=P.D/2, fc='red')
 state = [P.z0,P.zdot0,P.h0,P.hdot0,P.theta0,P.thetadot0]
 
-
+zd = 4
+hd = .5
+z_prev = P.z0
+theta_prev = P.theta0
+h_prev = P.h0
 
 #left and right panel
 line1, = ax.plot([], [], lw=P.d, color = 'black')
@@ -58,10 +63,16 @@ def init():
     return center,lmotor,rmotor,target,line1,line2
 
 def animate(i):
-    fl = 0
-    fr = 7.5
-    #damper
     global state
+    global z_prev
+    global theta_prev
+    global h_prev
+    global zd
+    global hd
+    [fl,fr] = contr.vtolController(zd,state[0],z_prev,hd,state[2],h_prev,state[4],theta_prev)
+    z_prev = state[0]
+    h_prev = state[2]
+    theta_prev = state[4]
     z_ = state[0]
     h_ = state[2]
     theta_ = state[4]

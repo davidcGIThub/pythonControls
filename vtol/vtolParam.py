@@ -21,7 +21,7 @@ target_width = center_width/2
 # Initial Conditions
 z0 = 2.5
 zdot0 = 0
-h0 = 2.5
+h0 = 1.25
 hdot0 = 0
 theta0 = 0
 thetadot0 = 0
@@ -30,10 +30,17 @@ ztdot0 = 0;
 
 # Simulation Parameters
 
-tstep = 0.001  # time step size for simulation
+tstep = 0.01  # time step size for simulation
 time = 2.0 # time in seconds of simulation
 steps = int(time/tstep) # number of steps in simulation
 # dirty derivative parameters
 
+Kp_H = .113437#height control - Force
+Kd_H = .5832
 
+Kp_Lat_In = .372075# Theta Control - Tau
+Kd_Lat_In = .191314
+
+Kp_Lat_Out = -.032076 # Z control - theta
+Kd_Lat_Out = -.007716
 # saturation limits

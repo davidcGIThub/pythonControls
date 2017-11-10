@@ -1,6 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-
+import vtolController as contr
 import numpy as np
 import vtolParam as P
 import vtolDynamics as dyn
@@ -11,14 +11,25 @@ zdata = []
 hdata = []
 tdata = np.linspace(0,P.time,P.steps+1)
 state = [P.z0,P.zdot0,P.h0,P.hdot0,P.theta0,P.thetadot0]
-fl = 5
-fr = 5
+fl = 0
+fr = 0
+
+z_prev = P.z0
+h_prev = P.h0
+theta_prev = P.theta0
 
 zdata.append(P.z0)
 hdata.append(P.h0)
 thetadata.append(P.theta0)
 
+zd = 1
+hd = 2
+
 for i in range(0,P.steps):
+    [fl,fr] = contr.vtolController(zd,state[0],z_prev,hd,state[2],h_prev,state[4],theta_prev)
+    z_prev = state[0]
+    h_prev = state[2]
+    theta_prev = state[4]
     state = dyn.vtolDynamics(state[0],state[1],state[2],state[3],state[4],state[5],fl,fr)
     zdata.append(state[0])
     hdata.append(state[2])
