@@ -41,6 +41,12 @@ def derivatives(state,force):
     m1 = P.m1
     m2 = P.m2
 
+    if(uncertian):
+        g = P.g_
+        L = P.L_
+        m1 = P.m1_
+        m2 = P.m2_
+
     thetaddot = ( force*L*math.cos(theta) - 2*m1*z*thetadot*zdot - m1*g*z*math.cos(theta) - (m2*g*L/2)*math.cos(theta) ) / (m1*z*z + (m2*L*L)/3)
     zddot = z*thetadot*thetadot - g*math.sin(theta)
 

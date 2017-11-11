@@ -19,13 +19,13 @@ motor_width = center_width /2
 target_width = center_width/2
 
 # Initial Conditions
-z0 = 2.5
+z0 = 4
 zdot0 = 0
-h0 = 1.25
+h0 = 2.5
 hdot0 = 0
 theta0 = 0
 thetadot0 = 0
-zt0 = 2.5;
+zt0 = 4;
 ztdot0 = 0;
 
 # Simulation Parameters
@@ -43,4 +43,17 @@ Kd_Lat_In = .191314
 
 Kp_Lat_Out = -.032076 # Z control - theta
 Kd_Lat_Out = -.007716
+
 # saturation limits
+saturated = True
+upper = 10
+lower = -10
+
+#desired reference
+amplitude_z = 2.5
+frequency_z = .08
+offset_z = 3
+
+amplitude_h = 0
+frequency_h = 1
+offset_h = 0

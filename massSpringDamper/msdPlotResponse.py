@@ -6,25 +6,30 @@ import msdParam as P
 import msdDynamics as dyn
 import msdController as contr
 
+#Set things up
 
-
-zdata = []
-tdata = np.linspace(0,P.time,P.steps+1)
+#position desired, m
+zd = 5
+#initialize the states
 state = [P.z0,P.zdot0]
 zprev = P.z0
+#Set up Data Arrays
 Fdata = []
-
-zd = 5 #position desired, m
+zdata = []
+tdata = np.linspace(0,P.time,P.steps+1)
 Fdata.append(contr.msdController(zd,state[0],zprev))
 zdata.append(P.z0)
 
 for i in range(0,P.steps):
-
+    #Find force neccesary from controller
     F = contr.msdController(zd,state[0],zprev)
-    Fdata.append(F)
-    zprev = state[0] #save the previous position
+    #save the previous position
+    zprev = state[0]
+    #Find the new states
     state = dyn.msdDynamics(state[0],state[1],F)
+    #Append Data to the arrays
     zdata.append(state[0])
+    Fdata.append(F)
 
 plt.figure(1)
 plt.clf()
@@ -41,9 +46,6 @@ plt.title("Mass Spring Damper Force Input")
 plt.ylabel("Force (N)")
 plt.xlabel("Time t (sec)")
 plt.show()
-
-
-
 
 #find the rise time
 t = tdata[-1]

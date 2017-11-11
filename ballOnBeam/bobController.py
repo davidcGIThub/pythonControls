@@ -9,10 +9,15 @@ def bobController(zd,z,z_prev,theta,theta_prev):
     force_tilde = bobInnerController(thetad,theta,theta_prev)
     force_e = P.g*(P.m1*z/P.L + P.m2/2)
     F = force_tilde + force_e
+    if(P.saturated):
+        if (F>P.upper):
+            F = P.upper
+        elif (F<P.lower):
+            F = P.lower
     return F
 
 def bobInnerController(thetad,theta,theta_prev):
     error =  thetad - theta
-    deriv = (theta - theta_prev)/P.tstepInner
+    deriv = (theta - theta_prev)/P.tstep
     force =  error*P.KpIn - deriv*P.KdIn
     return force

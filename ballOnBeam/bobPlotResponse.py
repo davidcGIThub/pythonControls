@@ -5,30 +5,40 @@ import numpy as np
 import bobParam as P
 import bobDynamics as dyn
 import bobController as contr
+import reference as ref
 
-zdata = []
-thetadata = []
-tdata = np.linspace(0,P.time,P.steps+1)
+#initialize states
 state = [P.z0,P.zdot0,P.theta0,P.thetadot0]
 theta_prev = P.theta0
+#initialize previous states
 z_prev = P.z0
-zd = 5 #z desired, m
+#initialize desired reference
+zd = ref.reference(0)
+#initialize input force
 F = contr.bobController(zd,state[0],z_prev,state[2],theta_prev)
-
+#initialize the arrays containing data
 Fdata = []
+zdata = []
+thetadata = []
 Fdata.append(F)
 zdata.append(P.z0)
 thetadata.append(P.theta0)
+tdata = np.linspace(0,P.time,P.steps+1)
 
 for i in range(0,P.steps):
+    #desired reference position
+    zd = ref.reference(i*P.tstep)
+    # use controller to get force
+    F = contr.bobController(zd,state[0],z_prev,state[2],theta_prev)
+    #save the previous states
     z_prev = state[0]
     theta_prev = state[2]
+    #assign new states from the dynamics
     state = dyn.bobDynamics(state[0],state[1],state[2],state[3],F)
-    F = contr.bobController(zd,state[0],z_prev,state[2],theta_prev)
+    #append data
     Fdata.append(F)
     thetadata.append(state[2])
     zdata.append(state[0])
-    print F
 
 plt.figure(1)
 plt.clf()

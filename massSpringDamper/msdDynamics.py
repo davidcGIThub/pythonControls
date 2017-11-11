@@ -29,6 +29,12 @@ def derivatives(state, force):
     m = P.m
     b = P.b
     k = P.k
+
+    if(P.uncertian):
+        m = P.m_
+        b = P.b_
+        k = P.k_
+
     z = state.item(0);
     zdot = state.item(1);
     zddot = (force - b*zdot - k*z) / m

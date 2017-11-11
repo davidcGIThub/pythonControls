@@ -7,51 +7,44 @@ import vtolParam as P
 import vtolDynamics as dyn
 import math
 import vtolController as contr
+import reference as ref
 
+#Setting Things up
 center_width = P.center_width
 motor_length = P.motor_length
 motor_width = P.motor_width
 target_width = P.target_width
-
 fig = plt.figure()
 plt.axes().set_aspect('equal')
 ax = fig.add_subplot(111)
-ax.set_xlim(0, 5)
-ax.set_ylim(0, 2.5)
-
+ax.set_xlim(0, 8)
+ax.set_ylim(0, 5)
 # center vtol
 x_ = P.z0 - center_width*math.cos(0)/2
 y_ = P.h0 - center_width/2
 center = patches.Rectangle((x_,y_),center_width,center_width,fc = 'red',ec = 'black')
-
 #left motor
 x_ = P.z0 - P.d*math.cos(P.theta0)
 y_ = P.h0 - P.d*math.sin(P.theta0)
 rmotor = patches.Ellipse(xy=[x_,y_],width = motor_length, height = motor_width, angle = P.theta0)
-
 #right motor
 x_ = P.z0 + P.d*math.cos(P.theta0)
 y_ = P.h0 + P.d*math.sin(P.theta0)
 lmotor = patches.Ellipse(xy=[x_,y_],width = motor_length, height = motor_width, angle = P.theta0)
-
 #target
 target = patches.Rectangle((P.zt0,0),target_width,target_width,fc = 'red',ec = 'black')
-
-#rectangle = patches.Rectangle((0,0),P.L,P.w,fc = 'blue',ec = 'black')
-#ball
-#yb_init = P.D/2+P.w # initial y position of ball when beam is horizontal
-#circle = patches.Circle((.25, yb_init), radius=P.D/2, fc='red')
-state = [P.z0,P.zdot0,P.h0,P.hdot0,P.theta0,P.thetadot0]
-
-zd = 4
-hd = .5
-z_prev = P.z0
-theta_prev = P.theta0
-h_prev = P.h0
-
 #left and right panel
 line1, = ax.plot([], [], lw=P.d, color = 'black')
 line2, = ax.plot([], [], lw=P.d, color = 'black')
+#Initialize the states
+state = [P.z0,P.zdot0,P.h0,P.hdot0,P.theta0,P.thetadot0]
+#Initialize the previous states
+z_prev = P.z0
+theta_prev = P.theta0
+h_prev = P.h0
+#Initialize the desired positions
+zd = ref.reference_z(0)
+hd = ref.reference_h(0)
 
 def init():
     ax.add_patch(center)
@@ -69,10 +62,17 @@ def animate(i):
     global h_prev
     global zd
     global hd
+    #update the desired locations
+    zd = ref.reference_z(P.tstep*i)
+    hd = ref.reference_h(P.tstep*i)
+    print ("zd: ", zd, "hd: ", hd)
+    #Compute the forces from the controller
     [fl,fr] = contr.vtolController(zd,state[0],z_prev,hd,state[2],h_prev,state[4],theta_prev)
+    #Save the previous states
     z_prev = state[0]
     h_prev = state[2]
     theta_prev = state[4]
+    #plots stuff
     z_ = state[0]
     h_ = state[2]
     theta_ = state[4]
@@ -99,7 +99,7 @@ def animate(i):
     rmotor.angle = theta_*180/math.pi
     #target
     target.set_xy([P.zt0,0]) #doesnt move right now
-
+    #Find the new States
     state = dyn.vtolDynamics(state[0],state[1],state[2],state[3],state[4],state[5],fl,fr)
 
     return center,lmotor,rmotor,target,line1,line2
