@@ -45,7 +45,8 @@ h_prev = P.h0
 #Initialize the desired positions
 zd = ref.reference_z(0)
 hd = ref.reference_h(0)
-
+#initialize counter
+k = 0
 def init():
     ax.add_patch(center)
     ax.add_patch(lmotor)
@@ -62,9 +63,10 @@ def animate(i):
     global h_prev
     global zd
     global hd
+    global k
     #update the desired locations
-    zd = ref.reference_z(P.tstep*i)
-    hd = ref.reference_h(P.tstep*i)
+    zd = ref.reference_z(P.tstep*k)
+    hd = ref.reference_h(P.tstep*k)
     print ("zd: ", zd, "hd: ", hd)
     #Compute the forces from the controller
     [fl,fr] = contr.vtolController(zd,state[0],z_prev,hd,state[2],h_prev,state[4],theta_prev)
@@ -101,6 +103,8 @@ def animate(i):
     target.set_xy([P.zt0,0]) #doesnt move right now
     #Find the new States
     state = dyn.vtolDynamics(state[0],state[1],state[2],state[3],state[4],state[5],fl,fr)
+    #update counter
+    k = k + 1
 
     return center,lmotor,rmotor,target,line1,line2
 

@@ -8,9 +8,22 @@ ml = .25 # Mass of the left side, kg
 mt = mc + ml + mr # Total Mass, kg
 Jc = 0.0042 # inertia, kg m^2
 d = 0.3 # distance force exerted from center of mass, m
-L = .5 # Length of Beam, m
 mew = 0.1 # drag coeficient, kg/s
 g = 9.8 # gravity constant, m/s^2
+
+# uncertain parameters
+uncertain = True
+sign = -1
+if(np.random.rand() > .5 ):
+    sign = 1
+mc_ = mc + .2*mc*np.random.rand()*sign
+mr_ = mr
+ml_ = ml
+mt = mc_ + mr_ + ml
+Jc_ = Jc + .2*Jc*np.random.rand()*sign
+d_ = d + .2*d*np.random.rand()*sign
+mew_ = mew + .2*mew*np.random.rand()*sign
+g_ = g 
 
 # parameters for animation
 center_width = d*2/5

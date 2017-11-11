@@ -8,14 +8,14 @@ L = .5 # Length of Beam, m
 g = 9.8 # gravit constant, m/s^2
 
 #Uncertain parameters
-uncertian = True
+uncertian = False
 sign = -1
 if(np.random.rand() > .5 ):
     sign = 1
 m1_ = m1 + .2*m1*np.random.rand()*sign
 m2_ = m2 + .2*m2*np.random.rand()*sign
 L_ = L + .2*L*np.random.rand()*sign
-g_ = g + .2*g*np.random.rand()*sign
+g_ = g 
 
 # parameters for animation
 w = .01 # width of beam, m

@@ -41,7 +41,7 @@ def derivatives(state,force):
     m1 = P.m1
     m2 = P.m2
 
-    if(uncertian):
+    if(P.uncertian):
         g = P.g_
         L = P.L_
         m1 = P.m1_

@@ -7,6 +7,16 @@ def vtolController(zd,z,z_prev,hd,h,h_prev,theta,theta_prev):
 
     left_force =  force/2 - tau/(2*P.d)
     right_force = force/2 + tau/(2*P.d)
+    if(P.saturated):
+        if(right_force > P.upper):
+            right_force = P.upper
+        if(left_force > P.upper):
+            left_force = P.upper
+        if(right_force < P.lower):
+            right_force = P.lower
+        if(left_force < P.lower):
+            left_force = P.lower
+
 
     return [left_force,right_force]
 

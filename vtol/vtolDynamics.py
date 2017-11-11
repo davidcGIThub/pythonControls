@@ -36,9 +36,16 @@ def derivatives(state,fl,fr):
     ml = P.ml
     Jc = P.Jc
     d = P.d
-    L = P.L
     mew = P.mew
     g = P.g
+    if(P.uncertain):
+        mc = P.mc_
+        mr = P.mr_
+        ml = P.ml_
+        Jc = P.Jc_
+        d = P.d_
+        mew = P.mew_
+        g = P.g_
 
     zddot = (-(fr + fl)*math.sin(theta) - mew*zdot)/(mc + mr + ml)
     hddot = (-(mc+2*mr)*g + (fr + fl)*math.cos(theta))/(mc+mr+ml)

@@ -28,6 +28,8 @@ thetaprev = state[2]
 #initialize desired location
 zd = ref.reference(0)
 
+#temp counter
+k = 0
 
 def init():
     ax.add_patch(rectangle)
@@ -40,6 +42,7 @@ def animate(i):
     global zd
     global zprev
     global thetaprev
+    global k
     #ball position
     xball = state[0]*math.cos(state[2])-P.D/2*math.sin(state[2])
     yball = state[0]*math.sin(state[2])+P.D/2*math.cos(state[2])
@@ -56,9 +59,10 @@ def animate(i):
     #dynamics
     state = dyn.bobDynamics(state[0],state[1],state[2],state[3],F)
     #new desired reference
-    zd = ref.reference(i * P.tstep)
-
-    print("zd = ", zd, " time= ", i * P.tstep)
+    zd = ref.reference(k * P.tstep)
+    #update counter
+    k = k + 1
+    print("zd = ", zd, " time= ", k * P.tstep)
 
     return rectangle,circle
 
